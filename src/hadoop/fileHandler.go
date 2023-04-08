@@ -51,12 +51,13 @@ func CreateFile(directory string, data Product) error {
 	}
 
 	filePath, err := HandlePathResolution(client, directory, data.Title)
+
 	if err != nil {
 		return fmt.Errorf("error resolving file path: %w", err)
 	}
 
 	filePath = filePath + ".json"
-	if file, err := client.Stat(filePath); file == nil && err == nil {
+	if file, err := client.Stat(filePath); file != nil && err == nil {
 		return nil
 	}
 	file, err := client.CreateFile(filePath, 1, 1048576, 0777)
