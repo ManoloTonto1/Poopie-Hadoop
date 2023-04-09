@@ -41,10 +41,7 @@ func ScrapeAmazon() {
 		if product.Title != "" {
 			return
 		}
-		product.Title = strings.TrimLeft(title, " ")
-		product.Title = strings.TrimRight(product.Title, " ")
-		product.Title = strings.ReplaceAll(product.Title, "'", "")
-		product.Title = strings.ReplaceAll(product.Title, "/", "_")
+		product.Title = FormatTitle(title)
 	})
 
 	productCollector.OnHTML("#unrolledImgNo0 > div:nth-child(1) > img:nth-child(1)", func(h *colly.HTMLElement) {

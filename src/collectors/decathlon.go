@@ -55,10 +55,7 @@ func ScrapeDecathlon() {
 
 		title := e.DOM.Find("h1.vtmn-typo_title-4").Text()
 		fmt.Println("title: " + title)
-		product.Title = strings.TrimLeft(title, " ")
-		product.Title = strings.TrimRight(product.Title, " ")
-		product.Title = strings.ReplaceAll(product.Title, "'", "")
-		product.Title = strings.ReplaceAll(product.Title, "/", "_")
+		product.Title = FormatTitle(title)
 
 		image := e.DOM.Find("section.active:nth-child(2) > img").AttrOr("src", "")
 		fmt.Println("image: " + image)

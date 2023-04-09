@@ -1,10 +1,19 @@
 package collectors
 
 import (
+	"strings"
 	"time"
 
 	"github.com/gocolly/colly"
 )
+
+func FormatTitle(s string) string {
+	s = strings.TrimLeft(s, " ")
+	s = strings.TrimRight(s, " ")
+	s = strings.ReplaceAll(s, "'", "")
+	s = strings.ReplaceAll(s, "/", "_")
+	return s
+}
 
 var userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/111.0"
 

@@ -33,10 +33,7 @@ func ScrapeWalmart() {
 		if product.Title != "" {
 			return
 		}
-		product.Title = strings.TrimLeft(title, " ")
-		product.Title = strings.TrimRight(product.Title, " ")
-		product.Title = strings.ReplaceAll(product.Title, "'", "")
-		product.Title = strings.ReplaceAll(product.Title, "/", "_")
+		product.Title = FormatTitle(title)
 	})
 
 	productCollector.OnHTML("body", func(h *colly.HTMLElement) {
