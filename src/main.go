@@ -49,7 +49,7 @@ func LogData(startTime time.Time) {
 func main() {
 	startTime := time.Now()
 	// collectors.ScrapeAmazon()
-	collectors.ScrapeWalmart()
+	// collectors.ScrapeWalmart()
 	collectors.ScrapeDecathlon()
 	LogData(startTime)
 }
