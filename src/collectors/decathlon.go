@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/ManoloTonto1/Poopie-Hadoop/hadoop"
@@ -14,6 +15,9 @@ import (
 )
 
 func ScrapeDecathlon() {
+	productAmount := 0
+	page := 1
+	url := fmt.Sprintf("https://www.decathlon.nl/search?Ntt=schoenen&facets=sportGroupLabels:Hiking_natureLabel:Schoenen_&from=%d&size=40", page*40)
 	product := hadoop.Product{}
 	mainCollector := colly.NewCollector(
 		colly.AllowedDomains("www.decathlon.nl"),
@@ -23,13 +27,28 @@ func ScrapeDecathlon() {
 	productCollector := mainCollector.Clone()
 
 	mainCollector.OnHTML("body", func(e *colly.HTMLElement) {
+
+		amountTxt := e.DOM.Find("span.vtmn-tag").Text()
+		amountTxt = strings.ReplaceAll(amountTxt, " ", "")
+		amountTxt = strings.ReplaceAll(amountTxt, "\n", "")
+
+		i, err := strconv.Atoi(amountTxt)
+		if err != nil {
+			fmt.Println("Error converting string to int: ", err)
+		}
+		productAmount = i
+		fmt.Println("productAmount: ", i)
+
 		e.DOM.Find("a.dpb-product-model-link").Each(func(i int, s *goquery.Selection) {
 			_link := s.AttrOr("href", "")
 			productCollector.Visit(e.Request.AbsoluteURL(_link))
 		})
 
-		nextPage := e.DOM.Find("a.s-pagination-item:nth-child(8)").AttrOr("href", "")
-		productCollector.Visit(e.Request.AbsoluteURL(nextPage))
+		page++
+		url = fmt.Sprintf("https://www.decathlon.nl/search?Ntt=schoenen&facets=sportGroupLabels:Hiking_natureLabel:Schoenen_&from=%d&size=40", page*40)
+		if page*40 < productAmount {
+			mainCollector.Visit(url)
+		}
 	})
 
 	productCollector.OnHTML("body", func(e *colly.HTMLElement) {
@@ -69,7 +88,7 @@ func ScrapeDecathlon() {
 						Page         int      "json:\"page\""
 					}{
 						AsyncRequest: true,
-						Count:        1000,
+						Count:        5000,
 						Ids:          []string{strings.Split(product.URl, "?mc=")[1]},
 						Page:         1,
 					},
@@ -129,5 +148,5 @@ func ScrapeDecathlon() {
 		fmt.Println("Visiting", r.URL)
 	})
 
-	mainCollector.Visit("https://www.decathlon.nl/search?Ntt=schoenen&facets=sportGroupLabels:Hiking_natureLabel:Schoenen_")
+	mainCollector.Visit(url)
 }

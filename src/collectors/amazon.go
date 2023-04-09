@@ -23,10 +23,13 @@ func ScrapeAmazon() {
 	productCollector := mainCollector.Clone()
 	reviewCollector := mainCollector.Clone()
 
-	mainCollector.OnHTML("a.a-link-normal.s-no-outline", func(e *colly.HTMLElement) {
-		_link := e.Attr("href")
-		productCollector.Visit(e.Request.AbsoluteURL(_link))
-
+	mainCollector.OnHTML("body", func(e *colly.HTMLElement) {
+		e.DOM.Find("a.a-link-normal.s-no-outline").Each(func(i int, s *goquery.Selection) {
+			_link := s.AttrOr("href", "")
+			productCollector.Visit(e.Request.AbsoluteURL(_link))
+		})
+		link := e.DOM.Find("a.s-pagination-item:nth-child(8)").AttrOr("href", "")
+		productCollector.Visit(e.Request.AbsoluteURL(link))
 	})
 
 	productCollector.OnHTML("span#productTitle", func(e *colly.HTMLElement) {
@@ -70,11 +73,6 @@ func ScrapeAmazon() {
 		product = hadoop.Product{}
 	})
 
-	mainCollector.OnHTML("a.s-pagination-item:nth-child(8)", func(e *colly.HTMLElement) {
-		_link := e.Attr("href")
-		productCollector.Visit(e.Request.AbsoluteURL(_link))
-
-	})
 	mainCollector.OnRequest(func(r *colly.Request) {
 		fmt.Println("Visiting", r.URL)
 	})
@@ -82,9 +80,3 @@ func ScrapeAmazon() {
 	mainCollector.Visit("https://www.amazon.com/s?k=outdoor+shoes&s=review-rank&ds=v1%3A5iK8eNCtJ3%2FFRhDW%2FZjDHZOAB7AdjYiLsaY513OaKEo&crid=3H44VUYJUM6FI&qid=1680523185&sprefix=outdoor+shoes%2Caps%2C321&ref=sr_st_review-rank")
 
 }
-
-// c.OnHTML("li.a-last > a", func(e *colly.HTMLElement) {
-// 	link := e.Attr("href")
-// 	c.Visit(link)
-// })
-// }

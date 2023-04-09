@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/ManoloTonto1/Poopie-Hadoop/collectors"
@@ -47,9 +48,21 @@ func LogData(startTime time.Time) {
 }
 
 func main() {
+	wg := sync.WaitGroup{}
 	startTime := time.Now()
-	// collectors.ScrapeAmazon()
-	// collectors.ScrapeWalmart()
-	collectors.ScrapeDecathlon()
+	wg.Add(3)
+	go func() {
+		defer wg.Done()
+		collectors.ScrapeAmazon()
+	}()
+	go func() {
+		defer wg.Done()
+		collectors.ScrapeDecathlon()
+	}()
+	go func() {
+		defer wg.Done()
+		collectors.ScrapeWalmart()
+	}()
+	wg.Wait()
 	LogData(startTime)
 }

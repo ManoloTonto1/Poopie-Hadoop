@@ -53,10 +53,6 @@ func ScrapeWalmart() {
 		if product.Reviews == nil {
 			return
 		}
-		// 	if err := hadoop.CreateFile("products", product); err != nil {
-		// 		panic(err)
-		// 	}
-		// product = hadoop.Product{}
 
 	})
 	mainCollector.OnHTML("a.b--light-gray", func(e *colly.HTMLElement) {
