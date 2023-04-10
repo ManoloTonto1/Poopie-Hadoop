@@ -8,6 +8,13 @@ import (
 	"github.com/colinmarc/hdfs"
 )
 
+type Product struct {
+	URl     string   `json:"url"`
+	Title   string   `json:"title"`
+	Image   string   `json:"image"`
+	Reviews []string `json:"reviews"`
+}
+
 var nameNode = "localhost:9000"
 
 func InitConnectionWithHDFSCluster() (*hdfs.Client, error) {
