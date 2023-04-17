@@ -20,6 +20,7 @@ func ScrapeDecathlon() {
 	url := fmt.Sprintf("https://www.decathlon.nl/search?Ntt=schoenen&facets=sportGroupLabels:Hiking_natureLabel:Schoenen_&from=%d&size=40", page*40)
 	product := hadoop.Product{}
 	mainCollector := colly.NewCollector(
+		colly.Async(true),
 		colly.AllowedDomains("www.decathlon.nl"),
 		colly.UserAgent(userAgent),
 	)

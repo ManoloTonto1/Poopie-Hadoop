@@ -3,10 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"sync"
 	"time"
 
-	"github.com/ManoloTonto1/Poopie-Hadoop/collectors"
+	"github.com/ManoloTonto1/Poopie-Hadoop/analysis"
 	"github.com/ManoloTonto1/Poopie-Hadoop/hadoop"
 )
 
@@ -48,21 +47,26 @@ func LogData(startTime time.Time) {
 }
 
 func main() {
-	wg := sync.WaitGroup{}
-	startTime := time.Now()
-	wg.Add(3)
-	go func() {
-		defer wg.Done()
-		collectors.ScrapeAmazon()
-	}()
-	go func() {
-		defer wg.Done()
-		collectors.ScrapeDecathlon()
-	}()
-	go func() {
-		defer wg.Done()
-		collectors.ScrapeWalmart()
-	}()
-	wg.Wait()
-	LogData(startTime)
+	// wg := sync.WaitGroup{}
+	// startTime := time.Now()
+	// wg.Add(3)
+	// go func() {
+	// 	defer wg.Done()
+	// 	collectors.ScrapeAmazon()
+	// }()
+	// go func() {
+	// 	defer wg.Done()
+	// 	collectors.ScrapeDecathlon()
+	// }()
+	// go func() {
+	// 	defer wg.Done()
+	// 	collectors.ScrapeWalmart()
+	// }()
+	// wg.Wait()
+	// LogData(startTime)
+	analysis.LoadEnv()
+	analysis.ConnectToDB()
+	analysis.InitAnalysis()
+	analysis.StartDashBoard()
+
 }

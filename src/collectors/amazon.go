@@ -2,7 +2,6 @@ package collectors
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/ManoloTonto1/Poopie-Hadoop/hadoop"
@@ -13,6 +12,7 @@ import (
 func ScrapeAmazon() {
 	product := hadoop.Product{}
 	mainCollector := colly.NewCollector(
+		colly.Async(true),
 		colly.AllowedDomains("www.amazon.com"),
 		colly.UserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/111.0"),
 	)
@@ -57,9 +57,7 @@ func ScrapeAmazon() {
 	reviewCollector.OnHTML("body", func(h *colly.HTMLElement) {
 		h.DOM.Find("span.a-size-base.review-text.review-text-content > span").Each(func(i int, s *goquery.Selection) {
 			text := s.Text()
-			if text != "" && len(strings.Split(text, " ")) >= 100 {
-				product.Reviews = append(product.Reviews, text)
-			}
+			product.Reviews = append(product.Reviews, text)
 		})
 		if product.Reviews == nil {
 			return

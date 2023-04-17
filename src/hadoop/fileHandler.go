@@ -69,13 +69,23 @@ func CreateFile(directory string, data Product) error {
 	}
 	file, err := client.CreateFile(filePath, 1, 1048576, 0777)
 	if err != nil {
+		if strings.Contains(err.Error(), "org.apache.hadoop.hdfs.protocol.AlreadyBeingCreatedException") {
+			return nil
+		}
 		return fmt.Errorf("error creating file %s: %w", filePath, err)
 	}
 	defer file.Close()
 
 	if _, err = file.Write(fileContent); err != nil {
+		if strings.Contains(err.Error(), "EOF") || strings.Contains(err.Error(), "file does not exist") {
+			return nil
+		}
 		return fmt.Errorf("error writing to file %s: %w", filePath, err)
 	}
 
 	return nil
+}
+
+func GetFile() {
+	
 }
