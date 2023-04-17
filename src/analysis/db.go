@@ -52,7 +52,12 @@ func ConnectToDB() {
 	}
 
 	db = database
-
+	if err = db.Exec("DELETE FROM reviews").Error; err != nil {
+		panic(err)
+	}
+	if err = db.Exec("DELETE FROM images").Error; err != nil {
+		panic(err)
+	}
 	db.AutoMigrate(&Review{})
 	db.AutoMigrate(&Image{})
 }
