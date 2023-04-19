@@ -6,6 +6,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.8.1
 	github.com/colinmarc/hdfs v1.1.3
 	github.com/gocolly/colly v1.2.0
+	gorm.io/gorm v1.25.0
 )
 
 require (
@@ -18,7 +19,6 @@ require (
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
 	github.com/oliamb/cutter v0.2.2 // indirect
 	golang.org/x/crypto v0.6.0 // indirect
-	gorm.io/gorm v1.25.0 // indirect
 )
 
 require (

@@ -47,7 +47,7 @@ func AnalyzeImages(imageUrl string) {
 	for _, color := range prominentColor {
 		if err := db.Create(&Image{
 			ImageURL:       imageUrl,
-			ProminentColor: color.AsString(),
+			ProminentColor: CheckRangesForColors(color.AsString()),
 		}).Error; err != nil {
 			panic(err)
 		}
@@ -59,6 +59,10 @@ func AnalyzeReviews(Reviews []string) {
 	for _, review := range Reviews {
 		sentiment := "Neutral"
 		score := 0
+		if len(review) == 0 || review == "" || review == " " || review == "\n" {
+			continue
+		}
+
 		for _, negativeWord := range NegativeWords {
 			if strings.Contains(review, negativeWord) {
 				score--
@@ -81,6 +85,7 @@ func AnalyzeReviews(Reviews []string) {
 			Review:    review,
 			Score:     score,
 			Sentiment: sentiment,
+			WordCount: len(review),
 		}).Error; err != nil {
 			panic(err)
 		}

@@ -16,6 +16,7 @@ var db *gorm.DB
 type Review struct {
 	gorm.Model
 	Review    string
+	WordCount int
 	Sentiment string
 	Score     int
 }
